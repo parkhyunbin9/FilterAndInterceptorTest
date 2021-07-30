@@ -11,7 +11,6 @@ public class TestRestController {
     }
     @PostMapping("/post")
     public String postRequest(@RequestBody String body) {
-        System.out.println(body);
         return "Post Request Called! ";
     }
     @PutMapping("/put")
@@ -22,5 +21,4 @@ public class TestRestController {
     public String deleteRequest(@RequestParam("type") String type, @RequestParam("name") String name) {
         return String.format("Delete Request Called! Type = %s Name = %s ", type, name);
     }
-
 }
