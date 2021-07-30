@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <h1>Interceptor Test</h1>
+    </head>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+   var Params = '?name=test&type=';
+   var data = { "name":"test", "type" : "POST" };
+   function getReq() {
+        $.ajax({
+            url: '/api/get'+Params+"GET",
+            method: "GET",
+            success: function (data) {
+            console.log(data);
+            $('#result').text(data);
+            },
+        })
+   }
+   function postReq() {
+        $.ajax({
+            url: '/api/post',
+            method: "POST",
+            contentType: "application/json; charset=UTF-8",
+            dataType:'json',
+            data : JSON.stringify(data),
+            success: function (data) {
+            console.log(data);
+            $('#result').text(data);
+            },
+        })
+   }
+
+   function putReq() {
+           $.ajax({
+            url: '/api/put'+Params+"PUT",
+            method: "PUT",
+            success: function (data) {
+            console.log(data);
+            $('#result').text(data);
+            },
+        })
+   }
+   function deleteReq() {
+           $.ajax({
+            url: '/api/delete'+Params+"DELETE",
+            method: "DELETE",
+            success: function (data) {
+            console.log(data);
+             $('#result').text(data);
+            },
+        })
+   }
+</script>
+    <body>
+        <div><button onclick="getReq()"> get test </button></div>
+        <div><button onclick="postReq()"> post test </button></div>
+        <div><button onclick="putReq()"> put test </button></div>
+        <div><button onclick="deleteReq()"> delete test </button></div>
+        <div id="result"></div>
+    </body>
+
+</html>
