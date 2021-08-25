@@ -1,16 +1,15 @@
 package com.example.IntercepterTest;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
 
 @Configuration
-public class InterceptorConfig extends WebMvcConfigurerAdapter {
+public class InterceptorConfig implements WebMvcConfigurer {
     @Autowired
     APIInterceptor apiInterceptor;
 
@@ -18,7 +17,7 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         /*set API Intetcept*/
         registry.addInterceptor(apiInterceptor)
-                .addPathPatterns("/**");
-                //.addPathPatterns(Arrays.asList("/api/*", "/*"));
+                //  .addPathPatterns("/**")
+                .excludePathPatterns("/**");
     }
 }

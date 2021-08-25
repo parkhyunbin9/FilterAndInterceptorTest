@@ -1,11 +1,13 @@
 <html>
-    <head>
-        <h1>Interceptor Test</h1>
-    </head>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script>
+<head>
+    <h1>Interceptor Test</h1>
+</head>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
    var Params = '?name=test&type=';
+   var errorParams = '?name=error&type=';
    var data = { "name":"test", "type" : "POST" };
+   var errorData = { "name":"error", "type" : "POST" };
    function getReq() {
         $.ajax({
             url: '/api/get'+Params+"GET",
@@ -16,6 +18,7 @@
             },
         })
    }
+
    function postReq() {
         $.ajax({
             url: '/api/post',
@@ -25,7 +28,7 @@
             data : JSON.stringify(data),
             success: function (data) {
             console.log(data);
-            $('#result').text(data);
+
             },
         })
    }
@@ -50,13 +53,61 @@
             },
         })
    }
+   function getErrorReq() {
+        $.ajax({
+            url: '/api/get'+errorParams+"GET",
+            method: "GET",
+            success: function (data) {
+            console.log(data);
+            $('#result').text(data);
+            },
+        })
+   }
+    function postErrorReq() {
+        $.ajax({
+            url: '/api/post',
+            method: "POST",
+            contentType: "application/json; charset=UTF-8",
+            dataType:'json',
+            data : JSON.stringify(errorData),
+            success: function (data) {
+            console.log(data);
+
+            },
+        })
+   }
+      function putErrorReq() {
+           $.ajax({
+            url: '/api/put'+errorParams+"PUT",
+            method: "PUT",
+            success: function (data) {
+            console.log(data);
+            $('#result').text(data);
+            },
+        })
+   }
+   function deleteErrorReq() {
+           $.ajax({
+            url: '/api/delete'+errorParams+"DELETE",
+            method: "DELETE",
+            success: function (data) {
+            console.log(data);
+             $('#result').text(data);
+            },
+        })
+   }
 </script>
-    <body>
-        <div><button onclick="getReq()"> get test </button></div>
-        <div><button onclick="postReq()"> post test </button></div>
-        <div><button onclick="putReq()"> put test </button></div>
-        <div><button onclick="deleteReq()"> delete test </button></div>
-        <div id="result"></div>
-    </body>
+<body>
+<div><button onclick="getReq()"> get test </button></div>
+<div><button onclick="postReq()"> post test </button></div>
+<div><button onclick="putReq()"> put test </button></div>
+<div><button onclick="deleteReq()"> delete test </button></div>
+<h3>Error Test</h3>
+<div><button onclick="getErrorReq()"> get Error test </button></div>
+<div><button onclick="postErrorReq()"> post Error test </button></div>
+<div><button onclick="putErrorReq()"> put Error test </button></div>
+<div><button onclick="deleteErrorReq()"> delete Error test </button></div>
+<div id="result"></div>
+</body>
 
 </html>

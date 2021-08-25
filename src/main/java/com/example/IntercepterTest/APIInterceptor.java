@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -20,10 +22,38 @@ public class APIInterceptor extends HandlerInterceptorAdapter {
     // before controller
     // return false -> controller로 요청을 안함
     // Object ->핸들러 정보( RequestMapping , DefaultServletHandler )
-    @Override
-    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object obj) throws IOException {
+
+    public boolean preHandle_test(HttpServletRequest req, HttpServletResponse res, Object obj) throws IOException {
         System.out.println("Interceptor Pre Handle!");
-        //requestPrinter(req);
+
+        /* request base */
+        String method = req.getMethod();
+        String url = req.getRequestURL().toString();
+        String urlQuery = "";
+        try {
+            urlQuery = URLDecoder.decode(req.getQueryString(), "UTF-8");
+        } catch (Exception e) {
+        }
+        /* request header */
+        List<String> headers = new ArrayList<>();
+        for (Enumeration<?> e = req.getHeaderNames(); e.hasMoreElements();) {
+            String headerName = e.nextElement().toString();
+            String headerValue = req.getHeader(headerName);
+
+            headers.add(String.format("%s: %s", headerName, headerValue));
+        }
+
+        String reqStr = String.format(
+                "#### General ####" +
+                        "\nRequest Method: " + method +
+                        "\nRequest URL: " + url +
+                        "\nRequest Query: " + urlQuery +
+                        "\nStatus Code: " + res.getStatus() +
+                        "\n\n#### Request Headers ####\n" + String.join("\n", headers)
+        );
+
+        System.out.println(reqStr);
+
         return true;
     }
 
@@ -31,15 +61,54 @@ public class APIInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest req, HttpServletResponse res, Object obj, ModelAndView mav) throws IOException {
         System.out.println("Interceptor Post Handle !");
-        //requestPrinter(req);
 
     }
-
+    /*
+     *
+     * */
     // view까지 처리가 끝난 후에 처리됨
-    @Override
-    public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object obj, Exception ex) throws IOException {
+
+    public void afterCompletiontest(HttpServletRequest req, HttpServletResponse res, Object obj, Exception ex) throws IOException {
         System.out.println("Interceptor all Fininsh");
-        requestPrinter(req);
+
+        /* request base */
+        String method = req.getMethod();
+        String url = req.getRequestURL().toString();
+        String urlQuery = "";
+        try {
+            urlQuery = URLDecoder.decode(req.getQueryString(), "UTF-8");
+        } catch (Exception e) {
+        }
+        /* request header */
+        List<String> headers = new ArrayList<>();
+        for (Enumeration<?> e = req.getHeaderNames(); e.hasMoreElements();) {
+            String headerName = e.nextElement().toString();
+            String headerValue = req.getHeader(headerName);
+
+            headers.add(String.format("%s: %s", headerName, headerValue));
+        }
+
+        /* request body */
+        String requestBody = "";
+        if ("POST".equals(method)) {
+            System.out.println("request read stream");
+            ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) req;
+            if (cachingRequest.getContentAsByteArray() != null && cachingRequest.getContentAsByteArray().length != 0 && req.getMethod().equals("POST") ) {
+                requestBody = new String(cachingRequest.getContentAsByteArray());
+            }
+            //requestBody = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        }
+
+        String reqStr = String.format(
+                "#### General ####" +
+                        "\nRequest Method: " + method +
+                        "\nRequest URL: " + url +
+                        "\nRequest Query: " + urlQuery +
+                        "\nStatus Code: " + res.getStatus() +
+                        "\n\n#### Request Headers ####\n" + String.join("\n", headers) +
+                        "\n\n#### Request Body ####\n" + requestBody
+        );
+        System.out.println(reqStr);
     }
 
     public void requestPrinter(HttpServletRequest request) throws IOException {
